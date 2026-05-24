@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import axios from "axios";
+import api from "@/lib/api";
 import { motion } from "framer-motion";
 import { CheckCircle, PawPrint, ArrowLeft } from "lucide-react";
 
@@ -13,8 +13,8 @@ function SuccessContent() {
 
   useEffect(() => {
     if (sessionId) {
-      axios
-        .get(`http://localhost:8080/api/success?session_id=${sessionId}`)
+      api
+        .get(`/api/success?session_id=${sessionId}`)
         .then(() => console.log("Booking confirmed"))
         .catch((err) => console.error(err));
     }

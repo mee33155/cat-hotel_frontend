@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import axios from "axios";
+import api, { API_BASE } from "@/lib/api";
 import {
   ArrowLeft,
   Star,
@@ -27,7 +27,7 @@ type Room = {
   name: string;
   description: string;
   price: number;
-  image_url: string;
+  image_urls: string[];
   capacity: number;
   size: string;
   amenities: string;
@@ -39,8 +39,6 @@ const themes: Record<number, { bg: string; emoji: string }> = {
 };
 const defaultTheme = { bg: "from-[#e8f5e8] to-[#d9f0d9]", emoji: "🌿" };
 
-const API = "http://localhost:8080";
-
 export default function RoomDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -48,6 +46,7 @@ export default function RoomDetailPage() {
 
   const [room, setRoom] = useState<Room | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeImage, setActiveImage] = useState(0);
   const [showBooking, setShowBooking] = useState(false);
   const [toasts, setToasts] = useState<ToastData[]>([]);
   const [toastId, setToastId] = useState(0);
@@ -66,8 +65,8 @@ export default function RoomDetailPage() {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`${API}/api/rooms/${roomId}`)
+    api
+      .get(`/api/rooms/${roomId}`)
       .then((res) => setRoom(res.data))
       .catch(() => addToast("error", "ไม่สามารถดึงข้อมูลห้องพักได้"))
       .finally(() => setLoading(false));
@@ -81,7 +80,7 @@ export default function RoomDetailPage() {
   }) => {
     if (!room) return;
     try {
-      const res = await axios.post(`${API}/api/bookings/checkout`, {
+      const res = await api.post("/api/bookings/checkout", {
         customer_name: data.customerName,
         cat_name: data.catName,
         room_id: room.id,
@@ -124,6 +123,7 @@ export default function RoomDetailPage() {
   }
 
   const t = themes[room.id] || defaultTheme;
+  const images = room.image_urls?.length ? room.image_urls : [];
   let amenitiesList: string[] = [];
   try {
     amenitiesList = JSON.parse(room.amenities);
@@ -147,16 +147,67 @@ export default function RoomDetailPage() {
           กลับไปหน้าห้องพัก
         </motion.button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Image */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Image Gallery */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className={`h-[300px] md:h-[400px] bg-gradient-to-br ${t.bg} rounded-2xl flex items-center justify-center text-8xl relative border border-border-light`}
+             className="lg:col-span-2 flex flex-col gap-3"
           >
-            {t.emoji}
+            <div className={`h-[300px] md:h-[400px] bg-gradient-to-br ${t.bg} rounded-2xl flex items-center justify-center text-8xl relative border border-border-light overflow-hidden`}>
+              {images[activeImage] ? (
+                <img
+                  src={`${API_BASE}${images[activeImage]}`}
+                  alt={room.name}
+                  className="object-cover"
+                />
+              ) : (
+                t.emoji
+              )}
+            </div>
+            {images.length > 1 && (
+              <div className="flex gap-2">
+                {images.map((url, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveImage(i)}
+                    className={`h-[60px] w-full rounded-lg overflow-hidden border-2 transition-all ${
+                      i === activeImage ? "border-accent" : "border-border-light opacity-60 hover:opacity-100"
+                    }`}
+                  >
+                    <img src={`${API_BASE}${url}`} alt={`${room.name} ${i + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </motion.div>
+
+          
+           <div className={`h-[300px] md:h-[400px]`}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col gap-3">
+              {images[1] && (
+                <div className="flex gap-2">
+                  <img
+                    src={`${API_BASE}${images[1]}`}
+                    alt={room.name}
+                    className="w-[200px] h-full object-cover"
+                    />
+                </div>
+              )}
+              </motion.div>
+              <div className="flex gap-2">
+                <h3 className="text-sm font-semibold text-heading mb-3">
+                 ขนาดห้อง
+                </h3>
+                <h2>{room.size}</h2>
+              </div>
+            </div>
+              
 
           {/* Info */}
           <motion.div

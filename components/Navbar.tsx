@@ -6,7 +6,7 @@ import { Menu, X, PawPrint } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const links = [
-  { label: "หน้าแรก", href: "#hero" },
+  { label: "หน้าแรก", href: "/" },
   { label: "ห้องพัก", href: "/Room" },
   { label: "บริการ", href: "#services" },
   { label: "รีวิว", href: "#reviews" },

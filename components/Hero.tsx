@@ -1,9 +1,20 @@
 "use client";
-
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapPin, PawPrint, ArrowRight } from "lucide-react";
+import api, { API_BASE } from "@/lib/api";
 
 export default function Hero() {
+  const [heroImage, setHeroImage] = useState<string | null>(null);
+  useEffect(() => {
+    api
+      .get("/api/rooms")
+      .then((res) => {
+        const first = res.data?.[0];
+        if (first?.image_urls?.[0]) setHeroImage(first.image_urls[0]);
+      })
+      .catch(() => { });
+  }, []);
   return (
     <section
       id="hero"
@@ -99,7 +110,11 @@ export default function Hero() {
           >
             <div className="relative">
               <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-cozy-bg via-royal-bg to-garden-bg flex items-center justify-center overflow-hidden shadow-[0_12px_48px_rgba(120,70,30,0.15)] border border-border-light">
-                <span className="text-[80px] md:text-[100px] select-none">🐱</span>
+                <img
+                  src={heroImage ? `${API_BASE}${heroImage}` : undefined}
+                  alt="Cute cat"
+                  className="w-full h-full object-cover object-top"
+                />
               </div>
               {/* Floating badge */}
               <div className="absolute -bottom-3 -left-3 bg-white rounded-2xl px-4 py-3 shadow-[0_4px_20px_rgba(120,70,30,0.12)] border border-border-light flex items-center gap-2">

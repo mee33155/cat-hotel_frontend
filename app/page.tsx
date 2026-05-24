@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import api from "@/lib/api";
 
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -17,10 +17,8 @@ type Room = {
   name: string;
   description: string;
   price: number;
-  image_url: string;
+  image_urls: string[];
 };
-
-const API = "http://localhost:8080";
 
 export default function Home() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -42,8 +40,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`${API}/api/rooms`)
+    api
+      .get("/api/rooms")
       .then((res) => setRooms(res.data))
       .catch(() => addToast("error", "ไม่สามารถดึงข้อมูลห้องพักได้"));
   }, [addToast]);
@@ -56,7 +54,7 @@ export default function Home() {
   const handleSubmit = async (data: { customerName: string; catName: string; checkIn: string; checkOut: string }) => {
     if (!selectedRoom) return;
     try {
-      const res = await axios.post(`${API}/api/bookings/checkout`, {
+      const res = await api.post("/api/bookings/checkout", {
         customer_name: data.customerName,
         cat_name: data.catName,
         room_id: selectedRoom.id,

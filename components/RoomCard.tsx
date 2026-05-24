@@ -3,20 +3,7 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
-
-type Room = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image_url: string;
-};
-
-type Props = {
-  room: Room;
-  index: number;
-  onBook: (roomId: number) => void;
-};
+import { API_BASE } from "@/lib/api";
 
 const themes: Record<number, { bg: string; emoji: string; badge: string; badgeCls: string }> = {
   1: { bg: "from-[#f9ede0] to-[#f5e3d0]", emoji: "🐱", badge: "⭐ ยอดนิยม", badgeCls: "bg-[#fff0e5] text-accent" },
@@ -43,8 +30,16 @@ export default function RoomCard({ room, index, onBook }: Props) {
       className="bg-white rounded-2xl overflow-hidden border border-border-light cursor-pointer transition-shadow hover:shadow-[0_12px_32px_rgba(120,70,30,0.12)] group"
     >
       {/* Image */}
-      <div className={`h-[140px] bg-gradient-to-br ${t.bg} flex items-center justify-center text-5xl relative group-hover:scale-[1.02] transition-transform duration-300`}>
-        {t.emoji}
+      <div className={`h-[140px] bg-gradient-to-br ${t.bg} flex items-center justify-center text-5xl relative group-hover:scale-[1.02] transition-transform duration-300 overflow-hidden`}>
+        {room.image_urls?.[0] ? (
+          <img
+            src={`${API_BASE}${room.image_urls[0]}`}
+            alt={room.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          t.emoji
+        )}
         <span
           className={`absolute top-3 right-3 text-[10px] px-2.5 py-1 rounded-full font-medium tracking-[0.3px] ${t.badgeCls}`}
         >
