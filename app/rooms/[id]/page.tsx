@@ -30,6 +30,9 @@ type Room = {
   image_urls: string[];
   capacity: number;
   size: string;
+  width: number;
+  length: number;
+  height: number;
   amenities: string;
 };
 
@@ -153,7 +156,7 @@ export default function RoomDetailPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-             className="lg:col-span-2 flex flex-col gap-3"
+            className="lg:col-span-2 flex flex-col gap-3"
           >
             <div className={`h-[300px] md:h-[400px] bg-gradient-to-br ${t.bg} rounded-2xl flex items-center justify-center text-8xl relative border border-border-light overflow-hidden`}>
               {images[activeImage] ? (
@@ -172,9 +175,8 @@ export default function RoomDetailPage() {
                   <button
                     key={i}
                     onClick={() => setActiveImage(i)}
-                    className={`h-[60px] w-full rounded-lg overflow-hidden border-2 transition-all ${
-                      i === activeImage ? "border-accent" : "border-border-light opacity-60 hover:opacity-100"
-                    }`}
+                    className={`h-[60px] w-full rounded-lg overflow-hidden border-2 transition-all ${i === activeImage ? "border-accent" : "border-border-light opacity-60 hover:opacity-100"
+                      }`}
                   >
                     <img src={`${API_BASE}${url}`} alt={`${room.name} ${i + 1}`} className="w-full h-full object-cover" />
                   </button>
@@ -183,123 +185,143 @@ export default function RoomDetailPage() {
             )}
           </motion.div>
 
-          
-           <div className={`h-[300px] md:h-[400px]`}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col gap-3">
+
+          <div className={`h-[300px] md:h-[400px]`}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="flex flex-col gap-3">
               {images[1] && (
                 <div className="flex gap-2">
                   <img
                     src={`${API_BASE}${images[1]}`}
                     alt={room.name}
                     className="w-[200px] h-full object-cover"
-                    />
+                  />
                 </div>
               )}
-              </motion.div>
-              <div className="flex gap-2">
-                <h3 className="text-sm font-semibold text-heading mb-3">
-                 ขนาดห้อง
+            </motion.div>
+            <div className="flex flex-col gap-1 mt-5">
+              <div className="flex flex-row items-baseline gap-1">
+                <h3 className="w-20 text-sm font-semibold text-[#c87941]">
+                  ขนาดห้อง
                 </h3>
                 <h2>{room.size}</h2>
               </div>
-            </div>
-              
-
-          {/* Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-col"
-          >
-            <h1 className="font-serif text-3xl md:text-4xl font-bold text-heading mb-2">
-              {room.name}
-            </h1>
-
-            {/* Rating */}
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex gap-0.5">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star
-                    key={s}
-                    className="w-4 h-4 text-gold-star fill-gold-star"
-                  />
-                ))}
-              </div>
-              <span className="text-sm text-muted-light">5.0</span>
-            </div>
-
-            {/* Price */}
-            <div className="mb-5">
-              <span className="text-3xl font-bold text-accent">
-                ฿{room.price.toLocaleString()}
-              </span>
-              <span className="text-muted-light text-sm ml-1">/ คืน</span>
-            </div>
-
-            {/* Quick info */}
-            <div className="flex gap-4 mb-5">
-              <div className="flex items-center gap-1.5 bg-accent-light/60 text-accent px-3 py-1.5 rounded-full text-xs font-medium">
-                <Users className="w-3.5 h-3.5" />
-                รับสูงสุด {room.capacity} ตัว
-              </div>
-              <div className="flex items-center gap-1.5 bg-accent-light/60 text-accent px-3 py-1.5 rounded-full text-xs font-medium">
-                <Ruler className="w-3.5 h-3.5" />
-                {room.size}
-              </div>
-            </div>
-
-            {/* Description */}
-            <p className="text-muted text-sm leading-relaxed mb-6">
-              {room.description}
-            </p>
-
-            {/* Amenities */}
-            {amenitiesList.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-heading mb-3">
-                  สิ่งอำนวยความสะดวก
+              <div className="flex flex-row items-baseline gap-1">
+                <h3 className="w-20 text-sm font-semibold text-[#c87941]">
+                  กว้าง
                 </h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {amenitiesList.map((item, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-2 text-sm text-muted"
-                    >
-                      <Check className="w-3.5 h-3.5 text-green-500 shrink-0" />
-                      {item}
-                    </div>
+                <h2>{room.width}</h2>
+              </div>
+              <div className="flex flex-row items-baseline gap-1">
+                <h3 className="w-20 text-sm font-semibold text-[#c87941]">
+                  ยาว
+                </h3>
+                <h2>{room.length}</h2>
+              </div>
+              <div className="flex flex-row items-baseline gap-1">
+                <h3 className="w-20 text-sm font-semibold text-[#c87941]">
+                  สูง
+                </h3>
+                <h2>{room.height}</h2>
+              </div>
+            </div>
+            </div>
+
+
+            {/* Info */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="flex flex-col"
+            >
+              <h1 className="font-serif text-3xl md:text-4xl font-bold text-heading mb-2">
+                {room.name}
+              </h1>
+
+              {/* Rating */}
+              <div className="flex items-center gap-2 mb-4">
+                <div className="flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star
+                      key={s}
+                      className="w-4 h-4 text-gold-star fill-gold-star"
+                    />
                   ))}
                 </div>
+                <span className="text-sm text-muted-light">5.0</span>
               </div>
-            )}
 
-            {/* Book button */}
-            <button
-              onClick={() => setShowBooking(true)}
-              className="w-full bg-accent hover:bg-accent-hover text-white py-3 rounded-full text-sm font-medium tracking-wide transition-colors mt-auto"
-            >
-              จองห้องนี้
-            </button>
-          </motion.div>
+              {/* Price */}
+              <div className="mb-5">
+                <span className="text-3xl font-bold text-accent">
+                  ฿{room.price.toLocaleString()}
+                </span>
+                <span className="text-muted-light text-sm ml-1">/ คืน</span>
+              </div>
+
+              {/* Quick info */}
+              <div className="flex gap-4 mb-5">
+                <div className="flex items-center gap-1.5 bg-accent-light/60 text-accent px-3 py-1.5 rounded-full text-xs font-medium">
+                  <Users className="w-3.5 h-3.5" />
+                  รับสูงสุด {room.capacity} ตัว
+                </div>
+                <div className="flex items-center gap-1.5 bg-accent-light/60 text-accent px-3 py-1.5 rounded-full text-xs font-medium">
+                  <Ruler className="w-3.5 h-3.5" />
+                  {room.size}
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="text-muted text-sm leading-relaxed mb-6">
+                {room.description}
+              </p>
+
+              {/* Amenities */}
+              {amenitiesList.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-sm font-semibold text-heading mb-3">
+                    สิ่งอำนวยความสะดวก
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {amenitiesList.map((item, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-2 text-sm text-muted"
+                      >
+                        <Check className="w-3.5 h-3.5 text-green-500 shrink-0" />
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Book button */}
+              <button
+                onClick={() => setShowBooking(true)}
+                className="w-full bg-accent hover:bg-accent-hover text-white py-3 rounded-full text-sm font-medium tracking-wide transition-colors mt-auto"
+              >
+                จองห้องนี้
+              </button>
+            </motion.div>
+          </div>
         </div>
+
+        <Footer />
+
+        {showBooking && room && (
+          <BookingModal
+            room={room}
+            onClose={() => setShowBooking(false)}
+            onSubmit={handleSubmit}
+          />
+        )}
+
+        <Toast toasts={toasts} onRemove={removeToast} />
       </div>
-
-      <Footer />
-
-      {showBooking && room && (
-        <BookingModal
-          room={room}
-          onClose={() => setShowBooking(false)}
-          onSubmit={handleSubmit}
-        />
-      )}
-
-      <Toast toasts={toasts} onRemove={removeToast} />
-    </div>
-  );
+      );
 }

@@ -50,8 +50,8 @@
   --color-royal-bg: var(--royal-bg);
   --color-garden-bg: var(--garden-bg);
   --color-input-bg: var(--input-bg);
-  --font-sans: var(--font-dm-sans);
-  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-dm-sans), var(--font-prompt), sans-serif;
+  --font-serif: var(--font-playfair), var(--font-mitr), serif;
 }
 
 html {
@@ -61,7 +61,7 @@ html {
 body {
   background: #fdf6ef !important;
   color: var(--foreground);
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-dm-sans), var(--font-prompt), sans-serif;
 }
 
 /* Custom scrollbar */
